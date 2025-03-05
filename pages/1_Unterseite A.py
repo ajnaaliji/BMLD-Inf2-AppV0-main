@@ -1,9 +1,5 @@
 import streamlit as st
 
-st.title("Kalorienredchner")
-
-st.write("Diese Seite ist eine Unterseite der Startseite.")
-
 import streamlit as st
 from datetime import datetime
 
