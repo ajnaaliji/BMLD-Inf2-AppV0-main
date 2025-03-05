@@ -1,7 +1,10 @@
 import streamlit as st
 import pandas as pd
 
+st.set_page_config(page_title="Kalorienrechner", page_icon="🔥")
+
 st.title("Kalorienrechner")
+
 
 """
 Dieser Kalorienrechner hilft deinen täglichen Energiebedarf 
@@ -25,3 +28,5 @@ Diese App wurde von folgenden Personen entwickelt:
 
 Autor: Samuel Wehrli (wehs@zhaw.ch)
 """
+
+st.write("Wähle in der Sidebar den **Kalorienrechner**, um deine Berechnung durchzuführen.")
