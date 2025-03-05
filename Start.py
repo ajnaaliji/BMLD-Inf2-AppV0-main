@@ -29,4 +29,4 @@ Diese App wurde von folgenden Personen entwickelt:
 Autor: Samuel Wehrli (wehs@zhaw.ch)
 """
 
-st.write("Wähle in der Sidebar den **Kalorienrechner**, um deine Berechnung durchzuführen.")
+st.write("Wähle in der Sidebar den **Kalorienrechner**, um deine Berechnung durchzuführen.") 
