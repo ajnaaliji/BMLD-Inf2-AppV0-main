@@ -4,19 +4,19 @@ import streamlit as st
 from datetime import datetime
 
 import matplotlib.pyplot as plt
-from utils.calculator import calculate_calories  # Korrekt importiert
+from utils.calculator import calculate_calories  
 
-# 🔥 Page Config - muss ganz oben stehen!
+# 🔥 Page Config
 st.set_page_config(
     page_title="Kalorienrechner",
-    page_icon="https://upload.wikimedia.org/wikipedia/commons/3/3c/Fire_Icon.svg"  # Alternativer Icon-Link
+    page_icon="https://upload.wikimedia.org/wikipedia/commons/3/3c/Fire_Icon.svg" 
 )
 
 # Streamlit UI
 st.title("Kalorienrechner")
 st.write("Dieser Kalorienrechner hilft deinen täglichen Energiebedarf basierend auf Geschlecht, Alter, Gewicht, Größe und Aktivitätslevel zu berechnen.")
 
-# Aktivitätsfaktoren als globale Variable definieren (wird für die Visualisierung benötigt)
+# Aktivitätsfaktoren als globale Variable definieren 
 activity_factors = {
     "Gering": 1.2,
     "Leicht aktiv": 1.375,
@@ -29,7 +29,7 @@ activity_factors = {
 with st.form("Kalorienrechner Formular"):
     gender = st.selectbox("Geschlecht", ["Männlich", "Weiblich"])
     age = st.number_input("Alter (Jahre)", min_value=1, max_value=120, value=25, step=1)
-    height = st.number_input("Größe (in Meter)", min_value=0.5, max_value=2.5, value=1.7, step=0.01)
+    height = st.number_input("Grösse (in Meter)", min_value=0.5, max_value=2.5, value=1.7, step=0.01)
     weight = st.number_input("Gewicht (in kg)", min_value=20.0, max_value=300.0, value=70.0, step=0.1)
     activity_level = st.selectbox("Aktivitätslevel", list(activity_factors.keys()))  # Vermeidet KeyError
 
@@ -44,7 +44,7 @@ if submitted:
     st.write(f"**Dein täglicher Kalorienbedarf:** {result['calories']} kcal")
     st.write(f"**Berechnet am:** {result['timestamp'].strftime('%d.%m.%Y %H:%M:%S')}")
 
-    # Debugging-Ausgabe (falls Visualisierung nicht funktioniert)
+    # Debugging-Ausgabe 
     st.write(f"Aktivitätslevel: {activity_level}")
     st.write(f"Aktivitätsfaktor: {activity_factors.get(activity_level, 'Nicht gefunden')}")
     st.write(f"Berechnete Kalorien: {result['calories']}")
@@ -61,9 +61,5 @@ if submitted:
         ax.set_ylabel("Kalorien")
         ax.set_title("Kalorienbedarf Vergleich")
 
-        st.pyplot(fig)
-        plt.close(fig)  # Verhindert mögliche Streamlit-Probleme
-    else:
-        st.error("Fehler: Das ausgewählte Aktivitätslevel wurde nicht erkannt.")
-
+        
 
