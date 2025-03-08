@@ -68,8 +68,8 @@ if submitted:
                 result["calories"] += 500  
 
             # Formatierte Ausgabe mit besserer Lesbarkeit
-            st.success(f"📝 **Dein täglicher Kalorienbedarf beträgt:**\n\n### {result['calories']} kcal")
-            st.info(f"📌 **Ziel:** {ziel}")
+            st.success(f" **Dein täglicher Kalorienbedarf beträgt:**\n\n### {result['calories']} kcal")
+            st.info(f" **Ziel:** {ziel}")
 
             # Diagramm: Vergleich zwischen Grundumsatz & Gesamtbedarf
             st.subheader("Kalorienverbrauch nach Aktivitätslevel")
