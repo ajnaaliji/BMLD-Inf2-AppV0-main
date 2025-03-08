@@ -1,36 +1,72 @@
 import streamlit as st
-import pandas as pd
 
+# Page Config
 st.set_page_config(page_title="Kalorienrechner", page_icon="🔥")
 
-st.title("Kalorienrechner")
+# 🏆 Titel mit Design
+st.markdown("<h1 style='text-align: center;'> Kalorienrechner</h1>", unsafe_allow_html=True)
 
+# 📌 Einführung mit farblicher Hervorhebung
+st.info("""
+Mit diesem Kalorienrechner kannst du deinen täglichen Energiebedarf berechnen 
+egal, ob du dein Gewicht halten, abnehmen oder zunehmen möchtest. 
+Gib einfach deine Daten ein und erhalte eine individuelle Empfehlung für deinen Kalorienbedarf!
+""")
 
-"""
-Dieser Kalorienrechner hilft dir, deinen täglichen Energiebedarf zu berechnen, basierend auf Geschlecht, Alter, Gewicht, Grösse und Aktivitätslevel.
+# 🎯 Wähle dein Ziel
+st.markdown("""
+### 🎯 **Wähle dein Ziel:**
+- **⚖ Gewicht halten** → Berechnung für den täglichen Kalorienbedarf, um dein aktuelles Gewicht stabil zu halten.
+- **📉 Abnehmen** → Berechnung mit einem Kaloriendefizit, um Gewicht zu verlieren.
+- **📈 Zunehmen** → Berechnung mit einem Kalorienüberschuss, um Gewicht zuzunehmen.
+""")
 
-🎯 Wähle dein Ziel:
+# ⚠ Hinweis als gelbe Box für mehr Sichtbarkeit
+st.warning("⚠ **Hinweis:** Die hier berechneten Kalorienwerte sind **nur Richtwerte** und dienen nicht als medizinische oder ernährungswissenschaftliche Beratung.")
 
-- Gewicht halten → Berechnung für den täglichen Kalorienbedarf, um dein aktuelles Gewicht zu stabilisieren.
-- Abnehmen → Berechnung mit einem Kaloriendefizit, um Gewicht zu verlieren.
-- Zunehmen → Berechnung mit einem Kalorienüberschuss, um Gewicht zuzunehmen.
+# 🛠 Entwicklerinfos in zwei Spalten für bessere Lesbarkeit
+st.markdown("---")  # Trennlinie für bessere Übersicht
 
-Gib einfach deine Daten ein und erhalte eine Schätzung deines optimalen Kalorienbedarfs!
-"""
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown("""
+    #### Entwickler:
+     **Ajna Aliji**  
+    [alijiajn@students.zhaw.ch](mailto:alijiajn@students.zhaw.ch)
+    """)
+
+with col2:
+    st.markdown("""
+     **Melisa Dedukic**  
+    [dedukmel@students.zhaw.ch](mailto:dedukmel@students.zhaw.ch)
+    """)
+
+# Navigation zum Kalorienrechner
+st.markdown("### Starte jetzt deine Berechnung!")
 
 import streamlit as st
-st. info("⚠ Hinweis: Die hier berechneten Kalorienwerte sind nur Richtwerte und dienen nicht als medizinische oder ernährungswissenschaftliche Beratung.")
 
-st.write("Klicke in der Sidebar auf Kalorienrechner oder nutze den Button unten, um deine Berechnung zu starten!") 
+# CSS für das Styling des Buttons
+st.markdown("""
+    <style>
+    .stButton>button {
+        background-color: #007BFF !important; /* Blau */
+        color: white !important;  /* Weiße Schrift */
+        font-size: 20px !important; /* Größere Schrift */
+        font-weight: bold !important; /* Fettschrift */
+        text-decoration: underline !important; /* Unterstrichen */
+        border-radius: 8px !important;
+        padding: 12px !important;
+        width: 100% !important;
+        border: none !important;
+        cursor: pointer !important;
+    }
+    .stButton>button:hover {
+        background-color: #0056b3 !important; /* Dunkleres Blau beim Hover */
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-if st.button("🔥 Zum Kalorienrechner"):
-    st.switch_page("pages/1_Kalorienrechner.py") 
-
-# !! WICHTIG: Eure Emails müssen in der App erscheinen!!
-
-# Streamlit über den Text unten direkt in die App - cool!
-"""
-Diese App wurde von folgenden Personen entwickelt:
-- Ajna Aliji (alijiajn@students.zhaw.ch)
-- Melisa Dedukic (dedukmel@students.zhaw.ch)"
-""" 
+# Funktionaler Button für den Seitenwechsel
+if st.button("Zum Kalorienrechner"):
+    st.switch_page("pages/1_Kalorienrechner.py")

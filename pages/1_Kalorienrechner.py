@@ -3,83 +3,86 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from utils.calculator import calculate_calories  
 
-# 🔥 Page Config
+# Page Config
 st.set_page_config(
-    page_title="Kalorienrechner",
+    page_title="Dein persönlicher Kalorienrechner",
     page_icon="🔥"
 )
 
-# 🏆 Titel & Einführung
-st.title("Kalorienrechner")
+# Titel
+st.title("Dein persönlicher Kalorienrechner ")
 
-# 🎯 Zielauswahl direkt im Formular
-ziel = st.radio("📌 Wähle dein Ziel:", ["Gewicht halten", "Abnehmen", "Zunehmen"])
+# Zielauswahl mit klaren Icons
+ziel = st.radio("📌 **Wähle dein Ziel:**", 
+    ["Gewicht halten", "Abnehmen", "Zunehmen"])
 
-# 📌 Dynamische Erklärung je nach gewähltem Ziel
+# Erklärung zum gewählten Ziel
 ziel_beschreibungen = {
-    "Gewicht halten": "💡 Berechne deinen täglichen Kalorienbedarf, um dein aktuelles Gewicht zu stabilisieren.",
-    "Abnehmen": "📉 Berechne deinen täglichen Kalorienbedarf mit einem Kaloriendefizit, um Gewicht zu verlieren.",
-    "Zunehmen": "📈 Berechne deinen täglichen Kalorienbedarf mit einem Kalorienüberschuss, um Gewicht zuzunehmen."
+    "Gewicht halten": "Berechne deinen täglichen Kalorienbedarf, um dein aktuelles Gewicht stabil zu halten.",
+    "Abnehmen": "Berechne deinen Kalorienbedarf mit einem Kaloriendefizit, um Gewicht zu verlieren.",
+    "Zunehmen": "Berechne deinen Kalorienbedarf mit einem Kalorienüberschuss, um Gewicht zuzunehmen."
 }
 st.info(ziel_beschreibungen[ziel])
 
-# 🔢 Aktivitätsfaktoren mit detaillierten Beschreibungen
-activity_factors = {
-    "Gering (wenig bis keine Bewegung)": 1.2,
-    "Leicht aktiv (leichte Bewegung 1–3 Tage/Woche)": 1.375,
-    "Moderat aktiv (mäßige Bewegung 3–5 Tage/Woche)": 1.55,
-    "Sehr aktiv (intensiver Sport 6–7 Tage/Woche)": 1.725,
-    "Extrem aktiv (tägliches intensives Training, körperliche Arbeit)": 1.9
+# 🔢 Aktivitätsfaktoren mit detaillierter Beschreibung
+activity_options = {
+    "Gering (kaum Bewegung, Büroarbeit)": "Gering",
+    "Leicht aktiv (1-3 Tage/Woche leichte Bewegung)": "Leicht aktiv",
+    "Moderat aktiv (3-5 Tage Sport/Woche)": "Moderat aktiv",
+    "Sehr aktiv (6-7 Tage intensives Training)": "Sehr aktiv",
+    "Extrem aktiv (tägliches hartes Training, körperliche Arbeit)": "Extrem aktiv"
 }
 
-# 📝 Eingabeformular für Benutzerdaten
+activity_factors = {
+    "Gering": 1.2,
+    "Leicht aktiv": 1.375,
+    "Moderat aktiv": 1.55,
+    "Sehr aktiv": 1.725,
+    "Extrem aktiv": 1.9
+}
+
+# 📝 Eingabeformular mit besseren Icons
 with st.form("Kalorienrechner Formular"):
     gender = st.selectbox("⚧ Geschlecht", ["Männlich", "Weiblich"])
     age = st.number_input("📆 Alter (Jahre)", min_value=1, max_value=120, value=25, step=1)
-    height = st.number_input("📏 Größe (in Meter)", min_value=0.5, max_value=2.5, value=1.7, step=0.01)
-    weight = st.number_input("⚖ Gewicht (in kg)", min_value=20.0, max_value=300.0, value=70.0, step=0.1)
-    activity_level = st.selectbox("🏋️ Aktivitätslevel", list(activity_factors.keys()))
+    height = st.number_input("📏 Grösse (m)", min_value=0.5, max_value=2.5, value=1.7, step=0.01)
+    weight = st.number_input("⚖ Gewicht (kg)", min_value=20.0, max_value=300.0, value=70.0, step=0.1)
+    
+    activity_choice = st.selectbox("⚡ Aktivitätslevel", list(activity_options.keys()))
+    activity_level = activity_options[activity_choice]  # Kurzname speichern
 
-    # 🚀 Berechnen-Button
-    submitted = st.form_submit_button("🔥 Kalorienbedarf berechnen")
+    submitted = st.form_submit_button("Kalorienbedarf berechnen")
 
 # 🔍 Verarbeitung nach Absenden des Formulars
 if submitted:
-    result = calculate_calories(age, weight, height, gender, activity_level)
+    try:
+        result = calculate_calories(age, weight, height, gender, activity_level)
 
-    # 🔥 Anpassung der Kalorienberechnung je nach Ziel
-    if "calories" in result:
-        if ziel == "Abnehmen":
-            result["calories"] -= 500  # Kaloriendefizit
-        elif ziel == "Zunehmen":
-            result["calories"] += 500  # Kalorienüberschuss
+        if not result or "calories" not in result:
+            st.error("❌ Fehler: Die Berechnung hat keinen Kalorienwert zurückgegeben!")
+        else:
+            # 🔥 Kalorienanpassung je nach Ziel mit Sicherheitscheck (keine negativen Werte)
+            if ziel == "Abnehmen":
+                result["calories"] = max(result["calories"] - 500, 800)  # Mindestens 800 kcal
+            elif ziel == "Zunehmen":
+                result["calories"] += 500  
 
-        # 🎯 Ergebnisse schön formatiert ausgeben
-        st.success(f"🎯 **Dein täglicher Kalorienbedarf beträgt:** {result['calories']} kcal")
-        st.info(f"📌 **Ziel:** {ziel}")
+            # Formatierte Ausgabe mit besserer Lesbarkeit
+            st.success(f"📝 **Dein täglicher Kalorienbedarf beträgt:**\n\n### {result['calories']} kcal")
+            st.info(f"📌 **Ziel:** {ziel}")
 
-        # 📊 Visualisierung des Kalorienbedarfs als Balkendiagramm
-        st.subheader("📊 Kalorienverbrauch nach Aktivitätslevel")
-        st.write("Das Diagramm zeigt den Vergleich zwischen deinem **Grundumsatz** (Kalorienverbrauch im Ruhezustand) und deinem **Gesamtbedarf** (Kalorienverbrauch mit Aktivität).")
+            # Diagramm: Vergleich zwischen Grundumsatz & Gesamtbedarf
+            st.subheader("Kalorienverbrauch nach Aktivitätslevel")
+            st.write("Hier siehst du den Vergleich zwischen deinem **Grundumsatz** (Ruhezustand) und deinem **Gesamtbedarf** (mit Aktivität).")
 
-        labels = ["Grundumsatz", "Gesamtbedarf"]
-        values = [result['calories'] / activity_factors[activity_level], result['calories']]
+            labels = ["Grundumsatz", "Gesamtbedarf"]
+            values = [result['calories'] / activity_factors[activity_level], result['calories']]
 
-        fig, ax = plt.subplots()
-        ax.bar(labels, values, color=["lightblue", "pink"])
-        ax.set_ylabel("Kalorien")
-        ax.set_title("Kalorienbedarf Vergleich")
+            fig, ax = plt.subplots()
+            ax.bar(labels, values, color=["#74C0FC", "#FFB3C1"])  # Klare, sanfte Farben
+            ax.set_ylabel("Kalorien")
+            ax.set_title("Kalorienbedarf Vergleich")
+            st.pyplot(fig)
 
-        # WICHTIG: Diagramm in Streamlit anzeigen
-        st.pyplot(fig)
-    else:
-        st.error("❌ Fehler: Die Berechnung hat keinen Kalorienwert zurückgegeben!")
-
-# 📥 Option: Ergebnis als CSV speichern
-st.download_button(
-    label="📥 Ergebnisse speichern",
-    data=f"Kalorienbedarf: {result['calories']} kcal\nZiel: {ziel}",
-    file_name="kalorienbedarf.txt",
-    mime="text/plain"
-)
-
+    except Exception as e:
+        st.error(f"⚠ Ein unerwarteter Fehler ist aufgetreten: {e}")
