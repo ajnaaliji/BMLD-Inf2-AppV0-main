@@ -12,7 +12,7 @@ st.set_page_config(
 # Titel
 st.title("Dein persönlicher Kalorienrechner ")
 
-# Zielauswahl mit klaren Icons
+# Zielauswahl
 ziel = st.radio("📌 **Wähle dein Ziel:**", 
     ["Gewicht halten", "Abnehmen", "Zunehmen"])
 
@@ -24,7 +24,7 @@ ziel_beschreibungen = {
 }
 st.info(ziel_beschreibungen[ziel])
 
-# 🔢 Aktivitätsfaktoren mit detaillierter Beschreibung
+# Aktivitätsfaktoren mit detaillierter Beschreibung
 activity_options = {
     "Gering (kaum Bewegung, Büroarbeit)": "Gering",
     "Leicht aktiv (1-3 Tage/Woche leichte Bewegung)": "Leicht aktiv",
@@ -41,7 +41,7 @@ activity_factors = {
     "Extrem aktiv": 1.9
 }
 
-# 📝 Eingabeformular mit besseren Icons
+# Eingabeformular mit besseren Icons
 with st.form("Kalorienrechner Formular"):
     gender = st.selectbox("⚧ Geschlecht", ["Männlich", "Weiblich"])
     age = st.number_input("📆 Alter (Jahre)", min_value=1, max_value=120, value=25, step=1)
@@ -53,7 +53,7 @@ with st.form("Kalorienrechner Formular"):
 
     submitted = st.form_submit_button("Kalorienbedarf berechnen")
 
-# 🔍 Verarbeitung nach Absenden des Formulars
+# Verarbeitung nach Absenden des Formulars
 if submitted:
     try:
         result = calculate_calories(age, weight, height, gender, activity_level)
