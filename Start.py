@@ -80,19 +80,14 @@ if st.button(" Zum Kalorienrechner"):
 
 st.write("")  # Leerzeile für Abstand
 
-# 🛠 Entwicklerinfos 
-st.markdown("---")  # Trennlinie für bessere Übersicht
+st.markdown("---")
 
-col1, col2 = st.columns(2)
-with col1:
-    st.markdown("""
-    #### Entwickler:
-     **Ajna Aliji**  
-    [alijiajn@students.zhaw.ch](mailto:alijiajn@students.zhaw.ch)
-    """)
+# Entwicklerinformationen untereinander anzeigen
+st.markdown("""
+#### Entwickler:
+**Ajna Aliji**  
+ [alijiajn@students.zhaw.ch](mailto:alijiajn@students.zhaw.ch)  
 
-with col2:
-    st.markdown("""
-     **Melisa Dedukic**  
-    [dedukmel@students.zhaw.ch](mailto:dedukmel@students.zhaw.ch)
-    """)
+**Melisa Dedukic**  
+ [dedukmel@students.zhaw.ch](mailto:dedukmel@students.zhaw.ch)  
+""")
