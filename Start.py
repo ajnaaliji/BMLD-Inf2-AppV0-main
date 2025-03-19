@@ -1,5 +1,10 @@
+import streamlit as st  # MUSS als erster Streamlit-Befehl stehen!
+
+# Page Config MUSS als erster Streamlit-Befehl stehen
+st.set_page_config(page_title="Kalorienrechner", page_icon="🔥")
+
 # ====== Start Init Block ======
-# This needs to copied on top of the entry point of the app (Start.py)
+# This needs to be copied on top of the entry point of the app (Start.py)
 
 import pandas as pd
 from utils.data_manager import DataManager
@@ -22,11 +27,7 @@ data_manager.load_user_data(
 # ====== End Init Block ======
 
 # ------------------------------------------------------------
-# Here starts the actual app, which was developed previously
-import streamlit as st
-
-# Page Config
-st.set_page_config(page_title="Kalorienrechner", page_icon="🔥")
+# Hier startet die eigentliche App
 
 # Titel
 st.title("Kalorienrechner")
