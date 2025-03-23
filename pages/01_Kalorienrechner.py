@@ -6,6 +6,20 @@ from utils.calculator import calculate_calories
 from utils.login_manager import LoginManager
 from utils.data_manager import DataManager  # ✅ Wichtig für Speicherung
 
+# 🔥 Kaloriendaten registrieren (wichtig für DataManager)
+data_manager = DataManager(fs_protocol='webdav', fs_root_folder="App_Melinja")
+try:
+    data_manager.load_user_data(
+        session_state_key='calorie_data_df',
+        file_name='data.csv',
+        initial_value=pd.DataFrame(),
+        parse_dates=['timestamp']
+    )
+except UnicodeDecodeError:
+    st.warning("⚠️ Die Datei konnte nicht gelesen werden.")
+    st.session_state["calorie_data_df"] = pd.DataFrame()
+
+# Page config
 st.set_page_config(
     page_title="Dein persönlicher Kalorienrechner",
     page_icon="🔥"
@@ -43,20 +57,15 @@ with st.form("Kalorienrechner Formular"):
     height = st.number_input("📏 Grösse (m)", min_value=0.5, max_value=2.5, value=1.7, step=0.01)
     weight = st.number_input("⚖ Gewicht (kg)", min_value=20.0, max_value=300.0, value=70.0, step=0.1)
 
-    # 🔥 Aktivitätslevel extrahieren
+    # Aktivitätslevel extrahieren
     activity_choice = st.selectbox("⚡ Aktivitätslevel", list(activity_options.keys()))
     activity_level = activity_options[activity_choice]
 
     submitted = st.form_submit_button("Kalorienbedarf berechnen")
 
-# Session State initialisieren
-if "calorie_data_df" not in st.session_state:
-    st.session_state["calorie_data_df"] = pd.DataFrame()
-
 # Verarbeitung nach Absenden des Formulars
 if submitted:
     try:
-        # ✅ Berechnung
         result = calculate_calories(age, weight, height, gender, activity_level)
 
         if not result or "calories" not in result:
@@ -65,7 +74,6 @@ if submitted:
             grundumsatz = result["bmr"]
             gesamtumsatz = result["calories"]
 
-            # Zielabhängige Kalorienanpassung
             if ziel == "Gewicht halten":
                 consumed_calories = gesamtumsatz  
             elif ziel == "Abnehmen":
@@ -73,7 +81,6 @@ if submitted:
             elif ziel == "Zunehmen":
                 consumed_calories = gesamtumsatz + 300  
 
-            # Kaloriendaten zusammenstellen
             new_data = {
                 "timestamp": datetime.now(),
                 "bmr": grundumsatz,
@@ -87,22 +94,15 @@ if submitted:
                 "activity_level": activity_level
             }
 
-            # Session State aktualisieren
-            st.session_state["calorie_data_df"] = pd.concat(
-                [st.session_state["calorie_data_df"], pd.DataFrame([new_data])],
-                ignore_index=True
-            )
+            # 🔥 In SWITCHdrive speichern
+            data_manager.append_record("calorie_data_df", new_data)
 
-            # 🔥 Dauerhaft speichern (SwitchDrive)
-            DataManager().append_record("calorie_data_df", new_data)
-
-            # ✅ Erfolgsmeldung
+            # Ergebnis anzeigen
             st.success(f" **Dein täglicher Kalorienbedarf beträgt:**\n\n### {int(consumed_calories)} kcal")
             st.info(f" **Ziel:** {ziel}")
 
-            # 📊 Balkendiagramm
+            # Balkendiagramm
             st.subheader("Kalorienverbrauch mit & ohne Aktivität")
-
             labels = ["Grundumsatz (Ruhe)", "Gesamtbedarf (mit Aktivität)"]
             values = [grundumsatz, gesamtumsatz]
 
