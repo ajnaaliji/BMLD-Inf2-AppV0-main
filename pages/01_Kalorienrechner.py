@@ -2,9 +2,10 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from datetime import datetime
 import pandas as pd
+from pytz import timezone  # ✅ NEU für korrekte Zeitzone
 from utils.calculator import calculate_calories  
 from utils.login_manager import LoginManager
-from utils.data_manager import DataManager  # ✅ Wichtig für Speicherung
+from utils.data_manager import DataManager
 
 # 🔥 Kaloriendaten registrieren (wichtig für DataManager)
 data_manager = DataManager(fs_protocol='webdav', fs_root_folder="App_Melinja")
@@ -57,7 +58,6 @@ with st.form("Kalorienrechner Formular"):
     height = st.number_input("📏 Grösse (m)", min_value=0.5, max_value=2.5, value=1.7, step=0.01)
     weight = st.number_input("⚖ Gewicht (kg)", min_value=20.0, max_value=300.0, value=70.0, step=0.1)
 
-    # Aktivitätslevel extrahieren
     activity_choice = st.selectbox("⚡ Aktivitätslevel", list(activity_options.keys()))
     activity_level = activity_options[activity_choice]
 
@@ -82,7 +82,7 @@ if submitted:
                 consumed_calories = gesamtumsatz + 300  
 
             new_data = {
-                "timestamp": datetime.now(),
+                "timestamp": datetime.now(timezone('Europe/Zurich')).strftime("%Y-%m-%d %H:%M:%S"),  # ✅ Zeitzone fix
                 "bmr": grundumsatz,
                 "burned_calories": gesamtumsatz,  
                 "consumed_calories": consumed_calories,
@@ -94,14 +94,11 @@ if submitted:
                 "activity_level": activity_level
             }
 
-            # 🔥 In SWITCHdrive speichern
             data_manager.append_record("calorie_data_df", new_data)
 
-            # Ergebnis anzeigen
             st.success(f" **Dein täglicher Kalorienbedarf beträgt:**\n\n### {int(consumed_calories)} kcal")
             st.info(f" **Ziel:** {ziel}")
 
-            # Balkendiagramm
             st.subheader("Kalorienverbrauch mit & ohne Aktivität")
             labels = ["Grundumsatz (Ruhe)", "Gesamtbedarf (mit Aktivität)"]
             values = [grundumsatz, gesamtumsatz]
