@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 from utils.calculator import calculate_calories  
 from utils.login_manager import LoginManager
-from utils.data_manager import DataManager  # <-- neu hinzugefügt für SWITCHdrive
+from utils.data_manager import DataManager  # ✅ Wichtig für Speicherung
 
 st.set_page_config(
     page_title="Dein persönlicher Kalorienrechner",
@@ -18,8 +18,7 @@ LoginManager().go_to_login('Start.py')
 st.title("Dein persönlicher Kalorienrechner")
 
 # Zielauswahl
-ziel = st.radio("📌 **Wähle dein Ziel:**", 
-    ["Gewicht halten", "Abnehmen", "Zunehmen"])
+ziel = st.radio("📌 **Wähle dein Ziel:**", ["Gewicht halten", "Abnehmen", "Zunehmen"])
 
 ziel_beschreibungen = {
     "Gewicht halten": "Berechne deinen täglichen Kalorienbedarf, um dein aktuelles Gewicht stabil zu halten.",
@@ -57,6 +56,7 @@ if "calorie_data_df" not in st.session_state:
 # Verarbeitung nach Absenden des Formulars
 if submitted:
     try:
+        # ✅ Berechnung
         result = calculate_calories(age, weight, height, gender, activity_level)
 
         if not result or "calories" not in result:
@@ -65,6 +65,7 @@ if submitted:
             grundumsatz = result["bmr"]
             gesamtumsatz = result["calories"]
 
+            # Zielabhängige Kalorienanpassung
             if ziel == "Gewicht halten":
                 consumed_calories = gesamtumsatz  
             elif ziel == "Abnehmen":
@@ -72,6 +73,7 @@ if submitted:
             elif ziel == "Zunehmen":
                 consumed_calories = gesamtumsatz + 300  
 
+            # Kaloriendaten zusammenstellen
             new_data = {
                 "timestamp": datetime.now(),
                 "bmr": grundumsatz,
@@ -91,7 +93,7 @@ if submitted:
                 ignore_index=True
             )
 
-            # 🔥 Daten dauerhaft speichern (SWITCHdrive)
+            # 🔥 Dauerhaft speichern (SwitchDrive)
             DataManager().append_record("calorie_data_df", new_data)
 
             # ✅ Erfolgsmeldung
