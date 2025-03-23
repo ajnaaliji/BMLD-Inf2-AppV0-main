@@ -16,11 +16,12 @@ login_manager.login_register()  # open login/register page
 # ✅ Daten aus SWITCHdrive laden (mit Fehlerbehandlung!)
 try:
     data_manager.load_user_data(
-        session_state_key='calorie_data_df', 
-        file_name='data.csv', 
-        initial_value=pd.DataFrame(), 
-        parse_dates=['timestamp']
-    )
+    session_state_key='calorie_data_df',
+    file_name='data.csv',
+    initial_value=pd.DataFrame(),
+    parse_dates=['timestamp'],
+    date_parser=lambda col: pd.to_datetime(col, errors='coerce')
+)
 except UnicodeDecodeError:
     st.warning("⚠️ Die Datei 'data.csv' konnte nicht gelesen werden und wurde zurückgesetzt.")
     st.session_state["calorie_data_df"] = pd.DataFrame()
